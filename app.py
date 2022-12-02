@@ -49,9 +49,9 @@ def churn_predict():
     y_pred_inf = np.where(y_pred_inf >= 0.5, 1, 0)
 
     if y_pred_inf == 0:
-        label = 'You are NOT our Churn Customer!'
+        label = 'Not Churn Customer!'
     else:
-        label =' Churn customers. Thank you for staying with us!'
+        label = 'Churn customers.'
 
     print('[DEBUG] Result : ', y_pred_inf, label)
     print('')
