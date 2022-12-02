@@ -19,7 +19,7 @@ def home():
     return '<h1>Awesome! It is perfectly running now!</h1>'
 
 @app.route('/predict', methods=['POST'])
-def titanic_predict():
+def churn_predict():
     args = request.json
 
     data_inf = {
@@ -40,7 +40,7 @@ def titanic_predict():
         'TotalCharges': args.get('TotalCharges')
     }
 
-    print('[DEBUG] Data Inference : ', data_inf)
+    print('[DEBUG] Data Inference : ', df_inf)
     
     # Transform Inference-Set
     df_inf = pd.DataFrame([df_inf])
