@@ -22,7 +22,7 @@ def home():
 def churn_predict():
     args = request.json
 
-    df_inf = {
+    data_inf = {
         'SeniorCitizen': args.get('SeniorCitizen'),
         'tenure': args.get('tenure'),
         'PhoneService': args.get('PhoneService'),
@@ -40,18 +40,18 @@ def churn_predict():
         'TotalCharges': args.get('TotalCharges')
     }
 
-    print('[DEBUG] Data Inference : ', df_inf)
+    print('[DEBUG] Data Inference : ', data_inf)
     
     # Transform Inference-Set
-    df_inf = pd.DataFrame([df_inf])
-    df_inf_transform = model_pipeline.transform(df_inf)
-    y_pred_inf = model_ann.predict(df_inf_transform)
+    data_inf = pd.DataFrame([data_inf])
+    data_inf_transform = model_pipeline.transform(data_inf)
+    y_pred_inf = model_ann.predict(data_inf_transform)
     y_pred_inf = np.where(y_pred_inf >= 0.5, 1, 0)
 
     if y_pred_inf == 0:
-        label = 'Not Churn Customer!'
+        label = 'Not Churn Customer'
     else:
-        label = 'Churn customers.'
+        label =' Churn Customer'
 
     print('[DEBUG] Result : ', y_pred_inf, label)
     print('')
@@ -65,4 +65,4 @@ def churn_predict():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', port=5001)
