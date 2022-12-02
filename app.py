@@ -22,7 +22,7 @@ def home():
 def churn_predict():
     args = request.json
 
-    data_inf = {
+    df_inf = {
         'SeniorCitizen': args.get('SeniorCitizen'),
         'tenure': args.get('tenure'),
         'PhoneService': args.get('PhoneService'),
