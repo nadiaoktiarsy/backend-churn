@@ -1,28 +1,31 @@
 import pandas as pd
 import numpy as np
 import joblib
+import sklearn
 from flask import Flask, request, jsonify
+print('The scikit-learn version is {}.'.format(sklearn.__version__))
 
-# App Initialization
-app = Flask(__name__)
+# App initialization
+app = Flask (__name__)
 
-# Load The Models
+# Load models and pipelines
 with open('final_pipeline.pkl', 'rb') as file_1:
   model_pipeline = joblib.load(file_1)
 
 from tensorflow.keras.models import load_model
 model_ann = load_model('churn_model.h5')
 
-# Route : Homepage
+# Route: homepage
 @app.route('/')
 def home():
-    return '<h1>Awesome! It is perfectly running now!</h1>'
+    return '<h1>It is working!</h1>'
 
 @app.route('/predict', methods=['POST'])
 def churn_predict():
     args = request.json
 
     data_inf = {
+        # example: 'PassengerId': args.get('PassengerId'),
         'SeniorCitizen': args.get('SeniorCitizen'),
         'tenure': args.get('tenure'),
         'PhoneService': args.get('PhoneService'),
@@ -40,20 +43,20 @@ def churn_predict():
         'TotalCharges': args.get('TotalCharges')
     }
 
-    print('[DEBUG] Data Inference : ', data_inf)
-    
-    # Transform Inference-Set
-    data_inf = pd.DataFrame([data_inf])
+    print('[DEBUG] Data Inferene : ', data_inf)
+
+    # Transform Inference-set
+    data_inf = pd.DataFrame([data_inf]).astype({'tenure':'float', 'SeniorCitizen': 'object'})
     data_inf_transform = model_pipeline.transform(data_inf)
     y_pred_inf = model_ann.predict(data_inf_transform)
     y_pred_inf = np.where(y_pred_inf >= 0.5, 1, 0)
 
     if y_pred_inf == 0:
-        label = 'Not Churn Customer'
+        label = "Not Churn customer"
     else:
-        label =' Churn Customer'
+        label = "Churn Customer"
 
-    print('[DEBUG] Result : ', y_pred_inf, label)
+    print('[DEBUG] Result: ', y_pred_inf, label)
     print('')
 
     response = jsonify(
@@ -65,4 +68,4 @@ def churn_predict():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001)
+    app.run(host='0.0.0.0')
